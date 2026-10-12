@@ -1,34 +1,42 @@
-name: Build My Apps
+name: Generer Mon APK
 on:
   push:
     branches: [ master, main ]
 jobs:
-  build-apk:
+  build-android:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Installer Python
-        uses: actions/setup-python@v5
+      - name: Configurer Java
+        uses: actions/setup-java@v4
         with:
-          python-version: '3.11'
-
-      - name: Installer Flet et les dépendances
-        run: |
-          python -m pip install --upgrade pip
-          pip install flet
+          distribution: 'zulu'
+          java-version: '17'
 
       - name: Configurer Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.24.0' # Version stable et ultra-compatible
           channel: 'stable'
 
-      - name: Compiler l'APK Android
-        run: |
-          flet build apk
+      - name: Configurer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-      - name: Téléverser le fichier APK
+      - name: Installer Flet
+        run: |
+          python -m pip install --upgrade pip
+          pip install flet
+
+      - name: Réparer et Compiler l'APK
+        run: |
+          # Cette commande force Flet à initialiser proprement le projet Flutter
+          flet build apk --verbose
+
+      - name: Sauvegarder l'APK
         uses: actions/upload-artifact@v4
         with:
-          name: my-phone-app
+          name: MonApplicationAndroid
           path: build/apk/
