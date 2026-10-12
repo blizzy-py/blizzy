@@ -25,7 +25,7 @@ jobs:
 
       - name: Compiler l'APK Android
         run: |
-          flet build apk --no-config
+          flet build apk
 
       - name: Téléverser le fichier APK
         uses: actions/upload-artifact@v4
